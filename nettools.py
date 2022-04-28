@@ -22,6 +22,16 @@ class peer():
             self.connection.send(reply)
         self.connection.close()
 
+    def sendData(self, message,verb=0):
+        try:
+            self.connection.send(message)
+        except socket.error:
+            print 'Send failed: {}'.format(socket.error.message)
+            self.connection.close()
+            sys.exit()
+        if verb > 0:
+            print 'Message sent successfully'
+
     def testLoop(self):
         self.connection.send('Welcome to the party!\r\n')
         i = 0
@@ -44,6 +54,7 @@ class node():
     def __init__(self,Hostname):
         self.hostname = Hostname
         self.connected = False
+        self.bound = False
 
     def printIP(self):
         try:
@@ -87,7 +98,7 @@ class node():
         try:
             self.socket.sendall(message)
         except socket.error:
-            print 'Send failed'
+            print 'Send failed: {}'.format(socket.error.message)
             sys.exit()
         if verb > 0:
             print 'Message sent successfully'
